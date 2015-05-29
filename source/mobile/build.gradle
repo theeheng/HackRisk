@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 18
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         applicationId "com.allianz.hackrisk.hackrisk"
-        minSdkVersion 22
-        targetSdkVersion 22
+        minSdkVersion 18
+        targetSdkVersion 18
         versionCode 1
         versionName "1.0"
     }

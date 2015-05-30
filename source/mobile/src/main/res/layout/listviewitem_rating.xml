@@ -11,15 +11,15 @@
         />
 
     <ProgressBar
-        android:id="@+id/listItemRatingBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_toEndOf="@id/listItemRatingIcon"
-        android:layout_centerVertical="true"
-        android:paddingLeft="20dp"
+    android:id="@+id/listItemRatingBar"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:visibility="visible"
+    android:layout_toEndOf="@id/listItemRatingIcon"
+    android:layout_centerVertical="true"
+    android:paddingLeft="20dp"
 
-        />
+    />
 
 </RelativeLayout>

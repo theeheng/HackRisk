@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +28,10 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
     NavigationDrawerHelper mNavigationDrawerHelper;
 
+    FrameLayout progressBarHolder;
+
+    AlphaAnimation inAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +43,18 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         mNavigationDrawerHelper.init(this, this);
 
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+
         // First we need to check availability of play services
 
         myApiClient =  new MyGoogleAPIClient(this.getApplicationContext(), MainActivity.class.getSimpleName(), this);
 
         if (myApiClient.checkPlayServices()) {
+
+            inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
 
             // Building the GoogleApi client
             myApiClient.buildGoogleApiClient();
@@ -60,9 +73,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        mNavigationDrawerHelper.handleOnOptionsItemSelected(item);
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -133,7 +145,10 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 Address currentAddress =  gc.getFromLocation(latitude, longitude, 1).get(0);
 
                 String locationLabel = getResources().getString(R.string.myLocation);
-                 myLocation.setText(locationLabel + ": " + currentAddress.getLocality() + ",  "+ currentAddress.getPostalCode());
+                 myLocation.setText(locationLabel + ": " + currentAddress.getLocality() + ",  "+ currentAddress.getCountryName());
+
+                CrimeAPIClient cac = new CrimeAPIClient(MainActivity.class.getSimpleName());
+                cac.CallCrimeRateAPI(latitude, longitude, progressBarHolder);
             }
             catch(Exception ex)
             {

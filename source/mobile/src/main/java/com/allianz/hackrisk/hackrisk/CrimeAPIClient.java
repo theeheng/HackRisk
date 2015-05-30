@@ -1,7 +1,21 @@
 package com.allianz.hackrisk.hackrisk;
 
+import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 /**
  * Created by devsupport on 30/05/2015.
@@ -11,16 +25,17 @@ public class CrimeAPIClient {
     private String TAG;
 
 
-    private String CrimeAtLocationApiURL = "https://data.police.uk/api/crimes-at-location?date=%s&lat=%s&lng=%s";
-
+    private String CrimeAtLocationApiURL = "https://data.police.uk/api/crimes-at-location?lat=%s&lng=%s";
 
     public CrimeAPIClient(String tag)
     {
         this.TAG = tag;
     }
 
-    public void CallCrimeRateAPI(double lat, double lng)
+    public void CallCrimeRateAPI(double lat, double lng, final FrameLayout progressBarHolder)
     {
+        final LinkedList<CrimeApiResult> crimeResult = new LinkedList<CrimeApiResult>();
+
         SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM" );
 
         Calendar cal = Calendar.getInstance();
@@ -28,28 +43,23 @@ public class CrimeAPIClient {
 
         String dateFormatString = formatter.format(cal.getTime());
 
-        /*JsonArrayRequest jsonObjReq = new JsonArrayRequest(
-                String.format(CrimeAtLocationApiURL,dateFormatString,Double.toString(lat),Double.toString(lng)) , new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonObjReq = new JsonArrayRequest(
+                String.format(CrimeAtLocationApiURL,Double.toString(lat),Double.toString(lng)) , new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
 
                 try {
-
-
                     // Parsing json object response
                     // response will be a json object
 
-                    resultStockCountItemArray = new LinkedList<StockCountItem>();
-                    resultStockItemSizeArray = new LinkedList<StockItemSize>();
-
                     for (int i = 0; i < response.length(); i++) {
 
-                        JSONObject jsonUsrPro = (JSONObject) response.get(i);
+                        JSONObject jsonObj = (JSONObject) response.get(i);
 
-                        StockCountItem s = new StockCountItem();
-                        s.SiteItemId = Integer.parseInt(jsonUsrPro.getString("SiteItemID"));
-                        s.CategoryId = Integer.parseInt(jsonUsrPro.getString("CategoryID"));
+                        CrimeApiResult s = new CrimeApiResult();
+                        s.setCategory(jsonObj.getString("category"));
+                       /* s.CategoryId = Integer.parseInt(jsonUsrPro.getString("CategoryID"));
                         s.ItemName = jsonUsrPro.getString("ItemName");
                         s.CategoryName = jsonUsrPro.getString("CategoryName");
                         s.CategoryHierarchy = jsonUsrPro.getString("CategoryHierarchy");
@@ -58,74 +68,56 @@ public class CrimeAPIClient {
                         s.StockItemId = Integer.parseInt(jsonUsrPro.getString("StockItemID"));
                         s.CostPrice = Double.parseDouble(jsonUsrPro.getString("CostPrice"));
                         s.Count = new LinkedList<StockCount>();
+*/
 
-                        resultStockCountItemArray.add(s);
+                        JSONObject location = (JSONObject) jsonObj.getJSONObject("location");
 
-                        JSONArray stockItemSizes = (JSONArray) jsonUsrPro.getJSONArray("StockItemSizes");
+                        if (location != null) {
 
-                        for(int j=0; j < stockItemSizes.length() ; j++)
-                        {
-                            int stockItemSizeId = Integer.parseInt(stockItemSizes.getJSONObject(j).getString("StockItemSizeID"));
-                            boolean exist = false;
+                            Location lc = new Location();
 
-                            for(StockItemSize stkSize : resultStockItemSizeArray)
-                            {
-                                if(stkSize.StockItemSizeId == stockItemSizeId)
-                                {
-                                    exist= true;
-                                    break;
-                                }
-                            }
+                            lc.setLatitude(location.getString("latitude"));
+                            lc.setLongitude(location.getString("longitude"));
 
-                            if(!exist) {
-                                StockItemSize sis = new StockItemSize();
-                                sis.StockItemSizeId = stockItemSizeId ;
-                                sis.StockItemId = Integer.parseInt(stockItemSizes.getJSONObject(j).getString("StockItemID")) ;
-                                sis.Size = Double.parseDouble(stockItemSizes.getJSONObject(j).getString("Size")) ;
-                                sis.UnitOfMeasureCode = stockItemSizes.getJSONObject(j).getString("UnitOfMeasureCode");
-                                // sis.UnitOfMeasureId = Integer.parseInt(stockItemSizes.getJSONObject(j).getString("Size"));
-                                sis.ConversionRatio = Double.parseDouble(stockItemSizes.getJSONObject(j).getString("ConversionRatio"));
-                                sis.CaseSizeDescription = stockItemSizes.getJSONObject(j).getString("CaseDescriptionID").equals("null") ? null : stockItemSizes.getJSONObject(j).getString("CaseDescriptionID") ;
-                                sis.IsDefault = stockItemSizes.getJSONObject(j).getString("IsDefault").equals("true") ? true : false ;
+                            JSONObject street = (JSONObject) location.getJSONObject("street");
 
-                                String currentCount = stockItemSizes.getJSONObject(j).getString("StockCount");
+                            if (street != null) {
+                                Street str = new Street();
+                                str.setName(street.getString("name"));
 
-                                if(!currentCount.equals("null"))
-                                {
-                                    StockCount cnt = new StockCount();
-                                    cnt.StockItemSizeId = sis.StockItemSizeId;
-                                    cnt.SiteItemId = s.SiteItemId;
-                                    cnt.CurrentCount = Double.parseDouble(currentCount);
-                                    cnt.Updated = false;
-                                    s.Count.add(cnt);
-                                }
-
-                                resultStockItemSizeArray.add(sis);
+                                lc.setStreet(str);
+                                s.setLocation(lc);
                             }
                         }
+
+                        JSONObject outcome = (JSONObject) jsonObj.getJSONObject("outcome_status");
+
+                        if(outcome != null) {
+                            OutcomeStatus outStatus = new OutcomeStatus();
+                            outStatus.setCategory(outcome.getString("category"));
+                            s.setOutcomeStatus(outStatus);
+                        }
+
+                        crimeResult.add(s);
                     }
-
-                    resultStockCountItemArray.get(0).StockItemSizes = resultStockItemSizeArray;
-
-                    CallResetStockCountItemDBForSite(resultStockCountItemArray, mNotificationHelper, startId);
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
 
-                    Toast.makeText(getApplicationContext(),
-                            "Error: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+                    Log.d(TAG, e.getMessage());
                 }
+
+                AlphaAnimation outAnimation = new AlphaAnimation(1f, 0f);
+                outAnimation.setDuration(200);
+                progressBarHolder.setAnimation(outAnimation);
+                progressBarHolder.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.getMessage());
 
-                Toast.makeText(getApplicationContext().getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

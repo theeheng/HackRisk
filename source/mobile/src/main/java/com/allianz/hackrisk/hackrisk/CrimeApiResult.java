@@ -14,7 +14,7 @@ public class CrimeApiResult {
 
     private String context;
 
-    private ArrayList<OutcomeStatus> outcomeStatus;
+    private OutcomeStatus outcomeStatus;
 
     private String persistentId;
 
@@ -101,7 +101,7 @@ public class CrimeApiResult {
      * @return
      * The outcomeStatus
      */
-    public ArrayList<OutcomeStatus> getOutcomeStatus() {
+    public OutcomeStatus getOutcomeStatus() {
         return outcomeStatus;
     }
 
@@ -110,7 +110,7 @@ public class CrimeApiResult {
      * @param outcomeStatus
      * The outcome_status
      */
-    public void setOutcomeStatus(ArrayList<OutcomeStatus> outcomeStatus) {
+    public void setOutcomeStatus(OutcomeStatus outcomeStatus) {
         this.outcomeStatus = outcomeStatus;
     }
 

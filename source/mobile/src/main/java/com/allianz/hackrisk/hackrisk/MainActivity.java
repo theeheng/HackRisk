@@ -4,14 +4,29 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ListView.OnItemClickListener {
+
+    private TextView myLocation;
+
+    NavigationDrawerHelper mNavigationDrawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mNavigationDrawerHelper = new NavigationDrawerHelper();
+
         setContentView(R.layout.activity_main);
+        myLocation = (TextView) findViewById(R.id.myLocation);
+        myLocation.setText(myLocation.getText()+": London");
+
+        mNavigationDrawerHelper.init(this, this);
     }
 
 
@@ -35,5 +50,10 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int optionLib, long l) {
+        mNavigationDrawerHelper.handleSelect(optionLib, this, "", 123);
     }
 }

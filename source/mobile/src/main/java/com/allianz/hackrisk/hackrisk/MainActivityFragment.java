@@ -127,8 +127,8 @@ public class MainActivityFragment extends Fragment {
         final RatingListViewArrayAdapter adapter = new RatingListViewArrayAdapter(getActivity()
                 .getApplicationContext(), android.R.layout.simple_list_item_1, rating, getActivity()
                 .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress),getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratinggreenprogress), getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratingredprogress)
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress), getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress)
                 );
         ratingListView.setAdapter(adapter);
 

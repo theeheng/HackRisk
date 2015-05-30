@@ -11,4 +11,7 @@
     <string name="app_home">Home</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="title_activity_search_view">SearchViewActivity</string>
+    <string name="search_setting_description">Address</string>
+    <string name="app_label">Allianz</string>
+    <string name="search_hint">search by address</string>
 </resources>

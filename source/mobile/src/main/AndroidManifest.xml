@@ -31,6 +31,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBUbVxXsBB6NOhMahEPVO7W3R5PhU42Kcc" />
 
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_home" >
@@ -58,7 +59,18 @@
         <activity
             android:name=".SearchViewActivity"
             android:label="@string/title_activity_search_view" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
     </application>
+
+    <provider
+        android:name=".AddressSearchByNameSuggestionProvider"
+        android:authorities="com.allianz.hackrisk.hackrisk.AddressSearchByNameSuggestionProvider" >
+    </provider>
 
 </manifest>

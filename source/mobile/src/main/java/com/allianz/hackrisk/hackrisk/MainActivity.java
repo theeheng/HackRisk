@@ -20,12 +20,17 @@ import android.widget.TextView;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
 public class MainActivity extends Activity implements ListView.OnItemClickListener, ILocationUpdateHandler, ICrimeUpdateHandler {
 
+    public static final String EXTRA_LONG = "LONGEXTRA";
+    public static final String EXTRA_LAT = "LATEXTRA";
+    public static final String EXTRA_CRIMEAPIRESULT = "CRIMEAPIRESULT";
 
+    private ArrayList<CrimeApiResult> crimeApiResults ;
     private Location mLastLocation;
 
     private MyGoogleAPIClient myApiClient;
@@ -95,14 +100,33 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         Intent intent = new Intent(getApplicationContext(), SearchViewActivity.class);
 
-        /*        Bundle b = new Bundle();
-                b.putSerializable(LoginActivity.EXTRA_CRIMEAPIRESULT, crimeApiResults);
+        if(crimeApiResults != null) {
+            Bundle b = new Bundle();
+            ArrayList<CrimeApiResult> rArray = new ArrayList<CrimeApiResult>();
+            rArray.addAll(crimeApiResults);
 
-                intent.putExtra(LoginActivity.EXTRA_LOCATION, locationLabel);*/
+            ArrayList<RiskObject> ro = new ArrayList<RiskObject>();
+
+            if(crimeApiResults != null) {
+                for (Iterator<CrimeApiResult> i = crimeApiResults.iterator(); i.hasNext(); ) {
+                    CrimeApiResult item = i.next();
+                    RiskObject o = new RiskObject();
+                    o.Category = item.getCategory();
+                    o.Latitude = Double.parseDouble(item.getLocation().getLatitude());
+                    o.Longitude = Double.parseDouble(item.getLocation().getLongitude());
+                    o.StreetName = item.getLocation().getStreet().getName();
+                    ro.add(o);
+                }
+            }
+                    b.putSerializable(MainActivity.EXTRA_CRIMEAPIRESULT, ro);
+            intent.putExtra(MainActivity.EXTRA_CRIMEAPIRESULT, b);
+        }
+        intent.putExtra(MainActivity.EXTRA_LONG, Double.toString(mLastLocation.getLongitude()));
+        intent.putExtra(MainActivity.EXTRA_LAT, Double.toString(mLastLocation.getLatitude()));
+
+       /*          intent.putExtra(LoginActivity.EXTRA_LOCATION, locationLabel);*/
 
         startActivity(intent);
-
-
     }
 
     /**
@@ -217,6 +241,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         MainActivityFragment maf = (MainActivityFragment)fm.findFragmentById(R.id.fragment);
         maf.crimeResult = result;
         maf.RebindFragment(result);
+
+        this.crimeApiResults = result;
         //fm.beginTransaction().detach(maf).attach(maf).commit();
     }
 }

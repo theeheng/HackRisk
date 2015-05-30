@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 18
     buildToolsVersion '19.1.0'
-
     defaultConfig {
         applicationId "com.allianz.hackrisk.hackrisk"
         minSdkVersion 18
@@ -13,9 +12,11 @@ android {
     }
     buildTypes {
         release {
-           minifyEnabled false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 

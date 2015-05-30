@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 
@@ -32,9 +33,9 @@ public class CrimeAPIClient {
         this.TAG = tag;
     }
 
-    public void CallCrimeRateAPI(double lat, double lng, final FrameLayout progressBarHolder)
+    public void CallCrimeRateAPI(double lat, double lng, final ICrimeUpdateHandler handler)
     {
-        final LinkedList<CrimeApiResult> crimeResult = new LinkedList<CrimeApiResult>();
+        final ArrayList<CrimeApiResult> crimeResult = new ArrayList<CrimeApiResult>();
 
         SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM" );
 
@@ -107,10 +108,8 @@ public class CrimeAPIClient {
                     Log.d(TAG, e.getMessage());
                 }
 
-                AlphaAnimation outAnimation = new AlphaAnimation(1f, 0f);
-                outAnimation.setDuration(200);
-                progressBarHolder.setAnimation(outAnimation);
-                progressBarHolder.setVisibility(View.GONE);
+                handler.HandleCrimeUpdate(crimeResult);
+
             }
         }, new Response.ErrorListener() {
 

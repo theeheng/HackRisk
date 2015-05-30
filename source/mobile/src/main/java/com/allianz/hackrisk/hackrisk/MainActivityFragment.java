@@ -107,7 +107,7 @@ import java.util.List;
 public class MainActivityFragment extends Fragment {
 
     private ListView ratingListView;
-
+    public ArrayList<CrimeApiResult> crimeResult;
     public MainActivityFragment() {
     }
 
@@ -119,11 +119,21 @@ public class MainActivityFragment extends Fragment {
 
         ratingListView = (ListView) mView.findViewById (R.id.ratingListView);
 
+        /*
         HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
 
-        rating.put(R.drawable.car_icon, Double.parseDouble("10"));
-        rating.put(R.drawable.crime_icon, Double.parseDouble("50"));
-        rating.put(R.drawable.health_icon, Double.parseDouble("85"));
+
+        if(crimeResult == null || (crimeResult != null && crimeResult.size() == 0)) {
+            rating.put(R.drawable.car_icon, Double.parseDouble("10"));
+            rating.put(R.drawable.crime_icon, Double.parseDouble("10"));
+            rating.put(R.drawable.health_icon, Double.parseDouble("10"));
+        }
+        else
+        {
+            rating.put(R.drawable.car_icon, Double.parseDouble("80"));
+            rating.put(R.drawable.crime_icon, Double.parseDouble("80"));
+            rating.put(R.drawable.health_icon, Double.parseDouble("80"));
+        }
 
         final RatingListViewArrayAdapter adapter = new RatingListViewArrayAdapter(getActivity()
                 .getApplicationContext(), android.R.layout.simple_list_item_1, rating, getActivity()
@@ -150,11 +160,58 @@ public class MainActivityFragment extends Fragment {
                                 adapter.notifyDataSetChanged();
                                 view.setAlpha(1);
                             }
+                        });
+            }
+
+        });
+*/
+        return mView;
+    }
+
+    public void RebindFragment(ArrayList<CrimeApiResult> result)
+    {
+        HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
+
+        if(result == null || (result != null && result.size() == 0)) {
+            rating.put(R.drawable.car_icon, Double.parseDouble("10"));
+            rating.put(R.drawable.crime_icon, Double.parseDouble("10"));
+            rating.put(R.drawable.health_icon, Double.parseDouble("10"));
+        }
+        else
+        {
+            rating.put(R.drawable.car_icon, Double.parseDouble("80"));
+            rating.put(R.drawable.crime_icon, Double.parseDouble("80"));
+            rating.put(R.drawable.health_icon, Double.parseDouble("80"));
+        }
+
+        final RatingListViewArrayAdapter adapter2 = new RatingListViewArrayAdapter(getActivity()
+                .getApplicationContext(), android.R.layout.simple_list_item_1, rating, getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress),getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress), getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress)
+        );
+        ratingListView.setAdapter(adapter2);
+
+        ratingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+
+                Intent intent = new Intent(getActivity(), RiskListActivity.class);
+                startActivity(intent);
+                /*final String item = (String) parent.getItemAtPosition(position);
+                view.animate().setDuration(2000).alpha(0)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                list.remove(item);
+                                adapter.notifyDataSetChanged();
+                                view.setAlpha(1);
+                            }
                         });*/
             }
 
         });
-
-        return mView;
     }
 }

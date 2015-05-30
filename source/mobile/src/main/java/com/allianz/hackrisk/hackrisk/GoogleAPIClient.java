@@ -16,12 +16,18 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.util.ArrayList;
+
 /**
  * Created by devsupport on 30/05/2015.
  */
 
 interface ILocationUpdateHandler{
     void HandleUpdate();
+}
+
+interface ICrimeUpdateHandler{
+    void HandleCrimeUpdate(ArrayList<CrimeApiResult> result);
 }
 
 class MyGoogleAPIClient implements GoogleApiClient.ConnectionCallbacks,

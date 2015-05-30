@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search Risk"
-            android:id="@+id/button"
+            android:id="@+id/SearchRiskButton"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_alignEnd="@+id/fragment" />

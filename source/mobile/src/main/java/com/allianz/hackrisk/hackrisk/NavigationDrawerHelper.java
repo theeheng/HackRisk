@@ -5,19 +5,28 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,12 +37,72 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by Jim on 8/1/13.
  */
+
+class NavigationDrawerAdapter extends ArrayAdapter<String> {
+
+    Context adapterContext = null;
+    List<String> icons;
+
+    public NavigationDrawerAdapter(Context context, int textViewResourceId, List<String> iconList) {
+
+        super(context, textViewResourceId, iconList);
+
+        this.adapterContext = context;
+        this.icons = iconList;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // String item = getItem(position);
+        // return adapterRating.get(item);
+        return position;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) this.adapterContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.drawer_option_item, parent, false);
+
+        ImageView imgView = (ImageView) rowView.findViewById(R.id.listToggleIcon);
+
+        imgView.setImageResource(R.drawable.car_icon_s);
+        //imageView.setImageResource(ratingIconsResource.get(position));
+
+        Switch toggle = (Switch) rowView.findViewById(R.id.togglebutton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    int i =1;
+                } else {
+                    // The toggle is disabled
+                    int j = 0;
+                }
+            }
+        });
+
+
+        return rowView;
+    }
+
+
+}
+
 public class NavigationDrawerHelper {
     DrawerLayout mDrawerLayout;
     ListView mDrawerListView;
@@ -45,8 +114,8 @@ public class NavigationDrawerHelper {
 
         String[] navigationDrawerOptions =
                 theActivity.getResources().getStringArray(R.array.navigation_drawer_options);
-        ArrayAdapter<String> navigationDrawerAdapter =
-                new ArrayAdapter<String>(theActivity, R.layout.drawer_option_item, navigationDrawerOptions);
+        NavigationDrawerAdapter navigationDrawerAdapter =
+                new NavigationDrawerAdapter(theActivity, R.layout.drawer_option_item, Arrays.asList(navigationDrawerOptions));
         mDrawerListView.setAdapter(navigationDrawerAdapter);
         mDrawerListView.setOnItemClickListener(listener);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);

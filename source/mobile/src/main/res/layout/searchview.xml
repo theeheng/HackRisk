@@ -12,7 +12,46 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
-        
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Find Risk"
+            android:id="@+id/searchTitleView"
+            android:textAlignment="center"
+            android:textColor="#ffff191b" />
+        <Button
+            android:id="@+id/bProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:drawableLeft="@android:drawable/ic_menu_compass"
+            android:textSize="24sp"
+            android:gravity="top|right" />
+    </LinearLayout>
+
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+           <EditText
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+
+               />
+            <Button
+                android:id="@+id/bSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+
+                android:textSize="24sp"/>
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

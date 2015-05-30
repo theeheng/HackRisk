@@ -5,25 +5,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivityFragment">
 
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
     <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+       android:id="@+id/RiskTitleLayout">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Find Risk"
             android:id="@+id/searchTitleView"
             android:textAlignment="center"
-            android:textColor="#ffff191b" />
+            android:textColor="#ffff191b"
+            android:layout_weight="0.90" />
         <Button
             android:id="@+id/bProfile"
             android:layout_width="wrap_content"
@@ -31,27 +26,81 @@
             android:padding="16dp"
             android:drawableLeft="@android:drawable/ic_menu_compass"
             android:textSize="24sp"
-            android:gravity="top|right" />
+            android:gravity="top|right"
+            android:layout_weight="0.1"/>
     </LinearLayout>
 
-        <LinearLayout android:orientation="horizontal"
+        <LinearLayout
+            android:id="@+id/RiskLayoutSearch"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/RiskTitleLayout">
 
            <EditText
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-
-               />
+               android:layout_weight="0.90" />
             <Button
                 android:id="@+id/bSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
+                android:layout_weight="0.1"
                 android:drawableLeft="@android:drawable/ic_menu_search"
 
                 android:textSize="24sp"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/RiskMapSelection"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/RiskLayoutSearch">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/GoogleMaps_placeholder"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/RiskMapSelection">
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow>
+                    <TextView android:text="*****"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Stat1"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Stat2"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Stat3"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"/>
+                </TableRow>
+            </TableLayout>
 
-    </LinearLayout>
+        </LinearLayout>
 </RelativeLayout>

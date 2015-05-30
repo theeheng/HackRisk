@@ -1,16 +1,44 @@
 package com.allianz.hackrisk.hackrisk;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements ListView.OnItemClickListener {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+
+
+public class MainActivity extends Activity implements ListView.OnItemClickListener, ILocationUpdateHandler {
+
+
+    private Location mLastLocation;
+
+    private MyGoogleAPIClient myApiClient;
 
     private TextView myLocation;
 
@@ -24,9 +52,20 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         setContentView(R.layout.activity_main);
         myLocation = (TextView) findViewById(R.id.myLocation);
-        myLocation.setText(myLocation.getText()+": London");
 
         mNavigationDrawerHelper.init(this, this);
+
+        // First we need to check availability of play services
+
+        myApiClient =  new MyGoogleAPIClient(this.getApplicationContext(), MainActivity.class.getSimpleName(), this);
+
+        if (myApiClient.checkPlayServices()) {
+
+            // Building the GoogleApi client
+            myApiClient.buildGoogleApiClient();
+
+            myApiClient.createLocationRequest();
+        }
     }
 
 
@@ -56,4 +95,78 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     public void onItemClick(AdapterView<?> adapterView, View view, int optionLib, long l) {
         mNavigationDrawerHelper.handleSelect(optionLib, this, "", 123);
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if ( myApiClient.GetGoogleAPIClient() != null) {
+            myApiClient.GetGoogleAPIClient().connect();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        myApiClient.checkPlayServices();
+
+        // Resuming the periodic location updates
+        if (myApiClient.GetGoogleAPIClient().isConnected() && myApiClient.IsLocationUpdate()) {
+            myApiClient.StartLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (myApiClient.GetGoogleAPIClient().isConnected()) {
+            myApiClient.GetGoogleAPIClient().disconnect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myApiClient.StopLocationUpdates();
+    }
+
+    /**
+     * Method to display the location on UI
+     * */
+    @Override
+    public void HandleUpdate() {
+
+        mLastLocation = LocationServices.FusedLocationApi
+                .getLastLocation(myApiClient.GetGoogleAPIClient());
+
+        if (mLastLocation != null) {
+
+            Geocoder gc = new Geocoder(getApplicationContext());
+
+            double latitude = mLastLocation.getLatitude();
+            double longitude = mLastLocation.getLongitude();
+
+            try {
+                Address currentAddress =  gc.getFromLocation(latitude, longitude, 1).get(0);
+
+                String locationLabel = getResources().getString(R.string.myLocation);
+                 myLocation.setText(locationLabel + ": " + currentAddress.getLocality() + ",  "+ currentAddress.getPostalCode());
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+
+
+        } else {
+
+            myLocation
+                    .setText("(Couldn't get the location. Make sure location is enabled on the device)");
+        }
+    }
+
+
+
 }

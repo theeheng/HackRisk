@@ -3,6 +3,7 @@ package com.allianz.hackrisk.hackrisk;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,19 +76,24 @@ import java.util.List;
 
         int progressBarPercentage = ratingPercentage.get(position).intValue();
 
-        if(progressBarPercentage > redThreshold)
+       if(progressBarPercentage > redThreshold)
         {
+            progressView.setProgress(0);
+            redProgress.setBounds(progressView.getProgressDrawable().getBounds());
             progressView.setProgressDrawable(redProgress);
-        }else if(progressBarPercentage < greenThreshold) {
-            progressView.setProgressDrawable(greenProgress);
         }
-        else
+       //else //(progressBarPercentage < greenThreshold)
+       //{
+       //     progressView.setProgressDrawable(greenProgress);
+       // }
+        /*else
         {
             progressView.setProgressDrawable(amberProgress);
-        }
+        }*/
 
+        //progressView.setProgressDrawable(amberProgress);
 
-        progressView.setMax(100);
+        //progressView.setMax(100);
         progressView.setProgress(progressBarPercentage);
 
 
@@ -112,13 +121,13 @@ public class MainActivityFragment extends Fragment {
         HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
 
         rating.put(R.drawable.car_icon, Double.parseDouble("10"));
-        rating.put(R.drawable.crime_icon, Double.parseDouble("10"));
-        rating.put(R.drawable.health_icon, Double.parseDouble("10"));
+        rating.put(R.drawable.crime_icon, Double.parseDouble("50"));
+        rating.put(R.drawable.health_icon, Double.parseDouble("85"));
 
         final RatingListViewArrayAdapter adapter = new RatingListViewArrayAdapter(getActivity()
                 .getApplicationContext(), android.R.layout.simple_list_item_1, rating, getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratinggreenprogress),getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress), getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress),getActivity()
+                .getApplicationContext().getResources().getDrawable(R.drawable.ratinggreenprogress), getActivity()
                 .getApplicationContext().getResources().getDrawable(R.drawable.ratingredprogress)
                 );
         ratingListView.setAdapter(adapter);

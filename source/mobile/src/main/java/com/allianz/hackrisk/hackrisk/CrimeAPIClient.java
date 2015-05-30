@@ -124,28 +124,7 @@ public class CrimeAPIClient {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
-        /*
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                String.format(CrimeAtLocationApiURL,dateFormatString,Double.toString(lat),Double.toString(lng)) , null , new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, response.toString());
-                try {
-                }
-                catch (Exception e) {
 
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-        }
-        });
-                       // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
-*/
 
 
     }

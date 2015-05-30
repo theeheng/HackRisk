@@ -80,6 +80,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         //myApiClient =  new MyGoogleAPIClient(getApplicationContext(), "UserLoginTask", this);

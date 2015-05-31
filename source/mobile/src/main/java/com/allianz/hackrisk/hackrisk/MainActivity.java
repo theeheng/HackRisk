@@ -1,8 +1,10 @@
 package com.allianz.hackrisk.hackrisk;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -53,6 +55,9 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         setContentView(R.layout.activity_main);
         myLocation = (TextView) findViewById(R.id.myLocation);
+
+        myLocation.setTextColor(Color.parseColor("#00509D"));
+
  searchRiskButton = (Button) findViewById(R.id.SearchRiskButton);
 
         searchRiskButton.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +99,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         mNavigationDrawerHelper.init(this, this);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setIcon(R.drawable.list_button_2);
+        View cView = getLayoutInflater().inflate(R.layout.actionbar, null);
+        actionBar.setCustomView(cView);
     }
 
     private void handleSearchRiskButtonClick(Button view) {
@@ -115,6 +125,28 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     o.Latitude = Double.parseDouble(item.getLocation().getLatitude());
                     o.Longitude = Double.parseDouble(item.getLocation().getLongitude());
                     o.StreetName = item.getLocation().getStreet().getName();
+                    o.Date = item.getMonth();
+
+                    if (item.getOutcomeStatus() != null) {
+
+                        if (item.getOutcomeStatus().getCategory() != null) {
+                            o.Description = item.getOutcomeStatus().getCategory();
+                        }
+
+                        if (item.getOutcomeStatus().getCategory() != null) {
+
+                            if (o.Description != null) {
+                                o.Description = o.Description + " " + item.getOutcomeStatus().getDate();
+                            } else {
+                                o.Description = item.getOutcomeStatus().getDate();
+                            }
+                        }
+
+                    }
+
+                    o.Header = item.getCategory();
+                    o.Location = item.getLocation().getStreet().getName();
+
                     ro.add(o);
                 }
             }
@@ -150,7 +182,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
                 String locationLabel = getResources().getString(R.string.myLocation);
 
-                myLocation.setText(locationLabel + ": " + currentAddress.getLocality() + ",  "+ currentAddress.getCountryName());
+                myLocation.setText(locationLabel + ": \n" + currentAddress.getLocality() + ", "+ currentAddress.getCountryName());
 
                 CrimeAPIClient cac = new CrimeAPIClient(MainActivity.class.getSimpleName());
                 cac.CallCrimeRateAPI(latitude, longitude, this);
@@ -242,7 +274,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         if(maf != null) {
             maf.crimeResult = result;
-            maf.RebindFragment(result);
+            maf.RebindFragment(result, true);
         }
         this.crimeApiResults = result;
         //fm.beginTransaction().detach(maf).attach(maf).commit();

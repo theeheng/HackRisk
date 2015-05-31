@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CarefulNow</string>
-    <string name="myLocation">My Location</string>
+    <string name="myLocation">Your current location is </string>
     <string name="action_settings">Settings</string>
     <string name="open_drawer_message">Open My Settings</string>
     <string name="close_drawer_message">Close My Settings</string>

@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -76,26 +77,50 @@ class NavigationDrawerAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) this.adapterContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
         View rowView = inflater.inflate(R.layout.drawer_option_item, parent, false);
 
         ImageView imgView = (ImageView) rowView.findViewById(R.id.listToggleIcon);
-
-        imgView.setImageResource(R.drawable.car_icon_s);
-        //imageView.setImageResource(ratingIconsResource.get(position));
-
+        TextView toggleText = (TextView) rowView.findViewById(R.id.toggleName);
         Switch toggle = (Switch) rowView.findViewById(R.id.togglebutton);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // The toggle is enabled
-                    int i =1;
-                } else {
-                    // The toggle is disabled
-                    int j = 0;
-                }
-            }
-        });
 
+        if(position == 0) {
+            imgView.setPadding(0,0,0,0);
+
+            imgView.setImageResource(R.drawable.profile);
+            toggleText.setVisibility(View.INVISIBLE);
+            toggle.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            toggleText.setText(icons.get(position));
+            toggle.setChecked(true);
+
+            if (icons.get(position).equals("Health Risk")) {
+                imgView.setImageResource(R.drawable.health_icon_s);
+
+            } else if (icons.get(position).equals("Crime Risk")) {
+                imgView.setImageResource(R.drawable.crime_icon_s);
+            } else if (icons.get(position).equals("Travel Risk")) {
+                imgView.setImageResource(R.drawable.car_icon_s);
+            }
+
+            //imageView.setImageResource(ratingIconsResource.get(position));
+
+
+            toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        // The toggle is enabled
+                        int i = 1;
+                    } else {
+                        // The toggle is disabled
+                        int j = 0;
+                    }
+                }
+            });
+        }
 
         return rowView;
     }
@@ -118,7 +143,8 @@ public class NavigationDrawerHelper {
                 new NavigationDrawerAdapter(theActivity, R.layout.drawer_option_item, Arrays.asList(navigationDrawerOptions));
         mDrawerListView.setAdapter(navigationDrawerAdapter);
         mDrawerListView.setOnItemClickListener(listener);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+//        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        mDrawerLayout.setBackgroundResource(android.R.color.white);
 
         //mDrawerListView.setItemChecked(0, true);
         setupActionBar(theActivity);

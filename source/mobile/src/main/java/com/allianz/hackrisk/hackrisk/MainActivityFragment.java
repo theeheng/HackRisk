@@ -3,6 +3,7 @@ package com.allianz.hackrisk.hackrisk;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -31,7 +33,7 @@ import java.util.List;
 
     Context adapterContext = null;
     ArrayList<Integer> ratingIconsResource;
-    ArrayList<Double> ratingPercentage;
+    ArrayList<String> ratingPercentage;
 
     int redThreshold = 75;
     int greenThreshold = 40;
@@ -41,17 +43,14 @@ import java.util.List;
     Drawable greenProgress;
 
     public RatingListViewArrayAdapter(Context context, int textViewResourceId,
-                              HashMap<Integer, Double> rating, Drawable green, Drawable amber, Drawable red) {
+                              HashMap<Integer, String> rating) {
 
         super(context, textViewResourceId, (List)new ArrayList<Integer>(rating.keySet()));
 
         this.adapterContext = context;
 
         this.ratingIconsResource = new ArrayList<Integer>(rating.keySet());
-        this.ratingPercentage= new ArrayList<Double>(rating.values());
-        redProgress = red;
-        amberProgress = amber;
-        greenProgress = green;
+        this.ratingPercentage= new ArrayList<String>(rating.values());
     }
 
     @Override
@@ -72,33 +71,55 @@ import java.util.List;
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.listviewitem_rating, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.listItemRatingIcon);
-        ProgressBar progressView = (ProgressBar) rowView.findViewById(R.id.listItemRatingBar);
+        TextView ratingNameView = (TextView) rowView.findViewById(R.id.listItemRatingName);
+        TextView ratingWordView = (TextView) rowView.findViewById(R.id.listItemRatingWord);
 
         imageView.setImageResource(ratingIconsResource.get(position));
 
-        int progressBarPercentage = ratingPercentage.get(position).intValue();
-
-       if(progressBarPercentage > redThreshold)
+        if(ratingIconsResource.get(position) == R.drawable.car_icon_2)
         {
-            progressView.setProgress(0);
-            redProgress.setBounds(progressView.getProgressDrawable().getBounds());
-            progressView.setProgressDrawable(redProgress);
+            ratingNameView.setText("Travel Risk");
         }
-       //else //(progressBarPercentage < greenThreshold)
-       //{
-       //     progressView.setProgressDrawable(greenProgress);
-       // }
-        /*else
+        else if(ratingIconsResource.get(position) == R.drawable.crime_button)
         {
-            progressView.setProgressDrawable(amberProgress);
-        }*/
+            ratingNameView.setText("Crime Risk");
+        }else if(ratingIconsResource.get(position) == R.drawable.health_button_2)
+        {
+            ratingNameView.setText("Health Risk");
+        }
+        else if(ratingIconsResource.get(position) == R.drawable.car_icon_s)
+        {
+            ratingNameView.setTextSize(12);
+            ratingWordView.setTextSize(12);
+            ratingNameView.setText("Travel Risk");
+        }
+        else if(ratingIconsResource.get(position) == R.drawable.crime_icon_s)
+        {
+            ratingNameView.setTextSize(12);
+            ratingWordView.setTextSize(12);
+            ratingNameView.setText("Crime Risk");
+        }else if(ratingIconsResource.get(position) == R.drawable.health_icon_s)
+        {
+            ratingNameView.setTextSize(12);
+            ratingWordView.setTextSize(12);
+            ratingNameView.setText("Health Risk");
+        }
 
-        //progressView.setProgressDrawable(amberProgress);
+        ratingNameView.setTextColor(Color.parseColor("#00509D"));
+                ratingWordView.setText(ratingPercentage.get(position));
 
-        //progressView.setMax(100);
-        progressView.setProgress(progressBarPercentage);
-
-
+        if(ratingPercentage.get(position).equals("High"))
+        {
+            ratingWordView.setTextColor(Color.parseColor("#E10042"));
+        }
+        else if (ratingPercentage.get(position).equals("Medium"))
+        {
+            ratingWordView.setTextColor(Color.parseColor("#FF9600"));
+        }
+        else if(ratingPercentage.get(position).equals("Low"))
+        {
+            ratingWordView.setTextColor(Color.parseColor("#00509D"));
+        }
         return rowView;
     }
 
@@ -121,6 +142,7 @@ public class MainActivityFragment extends Fragment {
 
         ratingListView = (ListView) mView.findViewById (R.id.ratingListView);
 
+        RebindFragment(null, true);
         /*
         HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
 
@@ -170,28 +192,42 @@ public class MainActivityFragment extends Fragment {
         return mView;
     }
 
-    public void RebindFragment(final ArrayList<CrimeApiResult> result)
+    public void RebindFragment(final ArrayList<CrimeApiResult> result, boolean isMainPage)
     {
-        HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
+        HashMap<Integer,String> rating = new HashMap<Integer,String>();
 
         if(result == null || (result != null && result.size() == 0)) {
-            rating.put(R.drawable.car_icon, Double.parseDouble("10"));
-            rating.put(R.drawable.crime_icon, Double.parseDouble("10"));
-            rating.put(R.drawable.health_icon, Double.parseDouble("10"));
+            rating.put((isMainPage) ? R.drawable.car_icon_2 : R.drawable.car_icon_s, "");
+            rating.put((isMainPage) ? R.drawable.crime_button : R.drawable.crime_icon_s, "");
+            rating.put((isMainPage) ? R.drawable.health_button_2 : R.drawable.health_icon_s, "");
         }
         else
         {
-            rating.put(R.drawable.car_icon, Double.parseDouble("80"));
-            rating.put(R.drawable.crime_icon, Double.parseDouble("80"));
-            rating.put(R.drawable.health_icon, Double.parseDouble("80"));
+            double percentage = ((double)result.size() / 30*100);
+            String ratingWord = "";
+
+            if(result != null)
+            {
+                if(percentage > 65)
+                {
+                    ratingWord = "High";
+                }else if(percentage < 40)
+                {
+                    ratingWord = "Low";
+                }
+                else
+                {
+                    ratingWord = "Medium";
+                }
+            }
+            rating.put((isMainPage) ? R.drawable.car_icon_2 : R.drawable.car_icon_s, "Medium");
+            rating.put((isMainPage) ? R.drawable.crime_button : R.drawable.crime_icon_s, ratingWord);
+            rating.put((isMainPage) ? R.drawable.health_button_2 : R.drawable.health_icon_s, "Low");
         }
 
         final RatingListViewArrayAdapter adapter2 = new RatingListViewArrayAdapter(getActivity()
-                .getApplicationContext(), android.R.layout.simple_list_item_1, rating, getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress),getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress), getActivity()
-                .getApplicationContext().getResources().getDrawable(R.drawable.ratingamberprogress)
-        );
+                .getApplicationContext(), android.R.layout.simple_list_item_1, rating);
+
         ratingListView.setAdapter(adapter2);
 
         ratingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -206,26 +242,26 @@ public class MainActivityFragment extends Fragment {
 
                 ArrayList<RiskObject> ro = new ArrayList<RiskObject>();
 
-                if(result != null && position == 2) {
+                String selectedRisk = ((TextView)ratingListView.getChildAt(position).findViewById(R.id.listItemRatingName)).getText().toString();
+
+                if (result != null && selectedRisk.equals("Crime Risk")) {
                     for (Iterator<CrimeApiResult> i = result.iterator(); i.hasNext(); ) {
                         CrimeApiResult item = i.next();
                         RiskObject o = new RiskObject();
 
                         o.Header = item.getCategory();
 
-                        if(item.getOutcomeStatus() != null) {
+                        if (item.getOutcomeStatus() != null) {
 
-                            if(item.getOutcomeStatus().getCategory() != null) {
+                            if (item.getOutcomeStatus().getCategory() != null) {
                                 o.Description = item.getOutcomeStatus().getCategory();
                             }
 
-                            if(item.getOutcomeStatus().getCategory() != null) {
+                            if (item.getOutcomeStatus().getCategory() != null) {
 
-                                if(o.Description != null) {
+                                if (o.Description != null) {
                                     o.Description = o.Description + " " + item.getOutcomeStatus().getDate();
-                                }
-                                else
-                                {
+                                } else {
                                     o.Description = item.getOutcomeStatus().getDate();
                                 }
                             }
@@ -240,26 +276,22 @@ public class MainActivityFragment extends Fragment {
                         o.StreetName = item.getLocation().getStreet().getName();
                         ro.add(o);
                     }
-                }
-                else if(position == 1)
-                {
+                } else if (selectedRisk.equals("Travel Risk")) {
                     RiskObject r1 = new RiskObject();
-                    r1.Header = "Traffic Risk Headline1";
+                    r1.Header = "Travel Risk Headline1";
                     r1.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
                     r1.Location = "London , United Kingdom";
                     r1.Date = "25/05/2015";
 
                     RiskObject r2 = new RiskObject();
-                    r2.Header = "Traffic Risk Headline2";
+                    r2.Header = "Travel Risk Headline2";
                     r2.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
                     r2.Location = "London , United Kingdom";
                     r2.Date = "25/05/2015";
 
                     ro.add(r1);
                     ro.add(r2);
-                }
-                else if (position == 0)
-                {
+                } else if (selectedRisk.equals("Health Risk")) {
                     RiskObject r1 = new RiskObject();
                     r1.Header = "Health Risk Headline1";
                     r1.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";

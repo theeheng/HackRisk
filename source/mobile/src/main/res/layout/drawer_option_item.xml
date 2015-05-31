@@ -9,15 +9,22 @@
         android:layout_height="fill_parent"
         android:paddingTop="15dp"
         android:paddingRight="15dp"
+        android:layout_alignParentTop="true"
         />
-
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/toggleName"
+android:layout_centerVertical="true"
+    android:textColor="@android:color/white"
+    android:layout_toRightOf="@id/listToggleIcon"/>
 
 <Switch
 android:id="@+id/togglebutton"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_toRightOf="@id/listToggleIcon"
+    android:layout_toRightOf="@id/toggleName"
     />
 
 </RelativeLayout>

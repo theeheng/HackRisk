@@ -43,8 +43,7 @@
                 <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress" android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white" />
+                    android:singleLine="true" />
 
                 <!--<EditText android:id="@+id/password" android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content" android:hint="@string/prompt_password"-->
@@ -63,14 +62,19 @@
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                     android:textStyle="bold"
-                    android:background="@color/shadow_color"
-                    android:textColor="@android:color/white" />
+
+                    android:textColor="@android:color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textAlignment="gravity"
+                    android:textSize="14sp" />
 
                 <Button android:id="@+id/plus_continue_button" style="?android:textAppearanceSmall"
                     android:layout_width="match_parent" android:layout_height="match_parent"
                     android:layout_weight="1" android:text="@string/plus_continues"
-                    android:background="@color/hilight_color"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical|center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>

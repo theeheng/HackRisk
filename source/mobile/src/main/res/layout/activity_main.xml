@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +20,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/myLocation"
-    ></TextView>
+    android:textAlignment="gravity"
+    android:layout_centerHorizontal="true"
+    android:textSize="16sp"
+    android:paddingBottom="20dp"></TextView>
 
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,21 +54,26 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search Risk"
+            android:text="Check risks in different location"
             android:id="@+id/SearchRiskButton"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/fragment" />
+            android:layout_alignEnd="@+id/fragment"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="14sp" />
     </RelativeLayout>
+
 
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:background="#111"/>
+        android:background="#111"
+        />
 
 </android.support.v4.widget.DrawerLayout>

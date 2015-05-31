@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="navigation_drawer_options">
-        <item>test1</item>
-        <item>test2</item>
+        <item>Profile</item>
+        <item>Travel Risk</item>
+        <item>Health Risk</item>
+        <item>Crime Risk</item>
     </string-array>
 </resources>

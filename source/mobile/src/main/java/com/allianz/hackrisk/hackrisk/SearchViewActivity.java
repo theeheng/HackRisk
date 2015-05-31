@@ -1,6 +1,8 @@
 package com.allianz.hackrisk.hackrisk;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.location.*;
@@ -47,6 +49,12 @@ private GoogleApiClient mGoogleApiClient;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchview);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setIcon(R.drawable.backbutton);
+        View cView = getLayoutInflater().inflate(R.layout.actionbar, null);
+        actionBar.setCustomView(cView);
 
         crimeApiHandler = new CrimeApiHandler();
 
@@ -201,6 +209,44 @@ if(crimeAPIResult != null) {
 
     }
     }
+
+        FragmentManager fm = getFragmentManager();
+        MainActivityFragment maf = (MainActivityFragment)fm.findFragmentById(R.id.fragment2);
+
+        ArrayList<CrimeApiResult> ro = new ArrayList<CrimeApiResult>();
+
+        if (crimeAPIResult != null) {
+            for (Iterator<RiskObject> i = crimeAPIResult.iterator(); i.hasNext(); ) {
+                RiskObject item = i.next();
+                CrimeApiResult o = new CrimeApiResult();
+
+                o.setCategory(item.Header);
+
+                if (item.Description != null) {
+
+                    OutcomeStatus out = new OutcomeStatus();
+                    out.setDate(item.Date);
+                    out.setCategory(item.Description);
+                    o.setOutcomeStatus(out);
+                }
+                Location l = new Location();
+                Street str = new Street();
+                str.setName(item.Location);
+                l.setStreet(str);
+                o.setLocation(l);
+                l.setLongitude(item.Latitude.toString());
+                l.setLatitude(item.Longitude.toString());
+                o.setMonth(item.Date);
+
+                ro.add(o);
+            }
+
+//            fm.beginTransaction().detach(maf).attach(maf).commit();
+            maf.crimeResult = ro;
+            maf.RebindFragment(ro, false);
+
+        }
+
         super.onSearchRequested();
 
     }
@@ -218,6 +264,7 @@ if(crimeAPIResult != null) {
         getMenuInflater().inflate(R.menu.menu_main_search, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -239,6 +286,26 @@ if(crimeAPIResult != null) {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+
+                handleBackAction();
+                // Toast.makeText(this, "home pressed", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onMenuItemSelected(featureId,item);
+
+        }
+    }
+
+    private void handleBackAction() {
+        finish();
+    }
+
     class CrimeApiHandler implements ICrimeUpdateHandler
     {
         @Override
@@ -253,8 +320,41 @@ if(crimeAPIResult != null) {
                     o.Latitude = Double.parseDouble(item.getLocation().getLatitude());
                     o.Longitude = Double.parseDouble(item.getLocation().getLongitude());
                     o.StreetName = item.getLocation().getStreet().getName();
+                    o.Date = item.getMonth();
+
+                    if (item.getOutcomeStatus() != null) {
+
+                        if (item.getOutcomeStatus().getCategory() != null) {
+                            o.Description = item.getOutcomeStatus().getCategory();
+                        }
+
+                        if (item.getOutcomeStatus().getCategory() != null) {
+
+                            if (o.Description != null) {
+                                o.Description = o.Description + " " + item.getOutcomeStatus().getDate();
+                            } else {
+                                o.Description = item.getOutcomeStatus().getDate();
+                            }
+                        }
+
+                    }
+
+                    o.Header = item.getCategory();
+                    o.Location = item.getLocation().getStreet().getName();
                     crimeAPIResult.add(o);
                 }
+
+                /*
+                 FragmentManager fm = getFragmentManager();
+        MainActivityFragment maf = (MainActivityFragment)fm.findFragmentById(R.id.fragment);
+
+        if(maf != null) {
+            maf.crimeResult = result;
+            maf.RebindFragment(result);
+        }
+        this.crimeApiResults = result;
+        //fm.beginTransaction().detach(maf).attach(maf).commit();
+                 */
             }
 
             setupMap();

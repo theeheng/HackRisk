@@ -145,6 +145,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setIcon(R.drawable.a_logo);
         View cView = getLayoutInflater().inflate(R.layout.actionbar, null);
         actionBar.setCustomView(cView);
     }
@@ -361,8 +362,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     protected void updateConnectButtonState() {
         //TODO: Update this logic to also handle the user logged in by email.
         boolean connected = getPlusClient().isConnected();
-        mSignOutButtons.setBackgroundColor(getResources().getColor(R.color.hilight_color));
-        mPlusSignInButton.setBackgroundColor(getResources().getColor(R.color.hilight_color));
+
 
         mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
         mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);

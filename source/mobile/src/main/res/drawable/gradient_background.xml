@@ -2,9 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item><shape>
+<<<<<<< HEAD
 
             <gradient android:angle="90" android:endColor="#00509D"  android:startColor="#00509D" android:type="linear" />
 
+=======
+            <gradient android:angle="90" android:endColor="#00529B"  android:startColor="#00529B" android:type="linear" />
+>>>>>>> origin/master
         </shape></item>
 
 </selector>

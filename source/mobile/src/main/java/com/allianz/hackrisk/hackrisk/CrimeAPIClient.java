@@ -91,12 +91,14 @@ public class CrimeAPIClient {
                             }
                         }
 
-                        JSONObject outcome = (JSONObject) jsonObj.getJSONObject("outcome_status");
+                        if(!jsonObj.isNull("outcome_status")) {
+                            JSONObject outcome = (JSONObject) jsonObj.getJSONObject("outcome_status");
 
-                        if(outcome != null) {
-                            OutcomeStatus outStatus = new OutcomeStatus();
-                            outStatus.setCategory(outcome.getString("category"));
-                            s.setOutcomeStatus(outStatus);
+                            if (outcome != null) {
+                                OutcomeStatus outStatus = new OutcomeStatus();
+                                outStatus.setCategory(outcome.getString("category"));
+                                s.setOutcomeStatus(outStatus);
+                            }
                         }
 
                         crimeResult.add(s);

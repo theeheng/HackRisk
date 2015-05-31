@@ -239,9 +239,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         FragmentManager fm = getFragmentManager();
         MainActivityFragment maf = (MainActivityFragment)fm.findFragmentById(R.id.fragment);
-        maf.crimeResult = result;
-        maf.RebindFragment(result);
 
+        if(maf != null) {
+            maf.crimeResult = result;
+            maf.RebindFragment(result);
+        }
         this.crimeApiResults = result;
         //fm.beginTransaction().detach(maf).attach(maf).commit();
     }

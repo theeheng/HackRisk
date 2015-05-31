@@ -62,6 +62,10 @@
                     android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                     android:textStyle="bold" />
 
+                <Button android:id="@+id/plus_continue_button" style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:layout_weight="1" android:text="@string/plus_continues" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

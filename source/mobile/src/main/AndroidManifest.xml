@@ -27,10 +27,11 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBUbVxXsBB6NOhMahEPVO7W3R5PhU42Kcc" />
 
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBUbVxXsBB6NOhMahEPVO7W3R5PhU42Kcc" />
 
         <activity
             android:name=".MainActivity"
@@ -66,11 +67,13 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-    </application>
 
-    <provider
+        <provider
         android:name=".AddressSearchByNameSuggestionProvider"
         android:authorities="com.allianz.hackrisk.hackrisk.AddressSearchByNameSuggestionProvider" >
     </provider>
+    </application>
+
+
 
 </manifest>

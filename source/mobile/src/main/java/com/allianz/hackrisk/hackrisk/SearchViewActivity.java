@@ -4,13 +4,22 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.location.*;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -30,18 +39,23 @@ public class SearchViewActivity extends Activity implements OnMapReadyCallback {
     private double longitude;
     private double latitude;
     private List<RiskObject> crimeAPIResult;
-
+private GoogleApiClient mGoogleApiClient;
     private String TAG = SearchViewActivity.class.getSimpleName();
+    private CrimeApiHandler crimeApiHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchview);
 
+        crimeApiHandler = new CrimeApiHandler();
+
         Intent queryIntent = getIntent();
 
-        longitude = Double.parseDouble(queryIntent.getStringExtra(MainActivity.EXTRA_LONG));
-        latitude = Double.parseDouble(queryIntent.getStringExtra(MainActivity.EXTRA_LAT));
+        if(queryIntent.getStringExtra(MainActivity.EXTRA_LONG) != null && queryIntent.getStringExtra(MainActivity.EXTRA_LAT) != null) {
+            longitude = Double.parseDouble(queryIntent.getStringExtra(MainActivity.EXTRA_LONG));
+            latitude = Double.parseDouble(queryIntent.getStringExtra(MainActivity.EXTRA_LAT));
+        }
 
         Bundle bundle = queryIntent.getExtras();
 
@@ -50,21 +64,29 @@ public class SearchViewActivity extends Activity implements OnMapReadyCallback {
             crimeAPIResult = (List<RiskObject>) bundle.getSerializable(MainActivity.EXTRA_CRIMEAPIRESULT);
         }
 
-
-
-        setupMap();
-
         final String queryAction = queryIntent.getAction();
         if (Intent.ACTION_SEARCH.equals(queryAction))
         {
+int i = 1;
            // CallSearchStockCountItem searchItemAsync = new CallSearchStockCountItem(this);
           //  String searchType = HomeActivity.SearchType.SearchByName.toString();
-          //  searchItemAsync.execute(searchType, queryIntent.getStringExtra(SearchManager.QUERY), null, Boolean.toString(false));
+          //  searchItemAsync.execute(searchType, , null, Boolean.toString(false));
            // finish();
         }
         else if(Intent.ACTION_VIEW.equals(queryAction))
         {
 
+            mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                    //.enableAutoManage(getContext(), 0 /* clientId */, this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+
+            mGoogleApiClient.connect();
+
+            String placeId = Uri.parse(queryIntent.getDataString()).getLastPathSegment();
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
            // CallSearchStockCountItem searchItemAsync = new CallSearchStockCountItem(this);
            // String searchType = SearchType.SearchBySiteItemId.toString();
            // searchItemAsync.execute(searchType, queryIntent.getData().getLastPathSegment());
@@ -72,8 +94,63 @@ public class SearchViewActivity extends Activity implements OnMapReadyCallback {
         }
         else {
             Log.d(TAG,"Create intent NOT from search");
+
+
+            setupMap();
         }
     }
+
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+
+
+            LatLng coordinate =  place.getLatLng();
+
+            longitude = coordinate.longitude;
+            latitude = coordinate.latitude;
+
+            CrimeAPIClient client = new CrimeAPIClient(SearchViewActivity.class.getSimpleName());
+
+            client.CallCrimeRateAPI(latitude, longitude , crimeApiHandler);
+
+            /* Format details of the place for display and show it in a TextView.
+            mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
+                    place.getId(), place.getAddress(), place.getPhoneNumber(),
+                    place.getWebsiteUri()));
+
+            // Display the third party attributions if set.
+            final CharSequence thirdPartyAttribution = places.getAttributions();
+            if (thirdPartyAttribution == null) {
+                mPlaceDetailsAttribution.setVisibility(View.GONE);
+            } else {
+                mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
+                mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
+            }*/
+
+
+            Log.i(TAG, "Place details received: " + place.getName());
+
+            mGoogleApiClient.disconnect();
+            places.release();
+
+
+        }
+    };
 
     private void setupMap() {
 
@@ -93,6 +170,8 @@ public class SearchViewActivity extends Activity implements OnMapReadyCallback {
     Double prevLatitude = null;
         Double prevLongitude = null;
 
+        Double threshold= 0.0002;
+
 if(crimeAPIResult != null) {
     for (Iterator<RiskObject> i = crimeAPIResult.iterator(); i.hasNext(); ) {
         RiskObject item = i.next();
@@ -101,7 +180,9 @@ if(crimeAPIResult != null) {
 
         if((prevLatitude != null && prevLongitude != null)&&(prevLatitude.equals(item.Latitude) && prevLongitude.equals(item.Longitude)))
         {
-            pos = new LatLng(item.Latitude + 0.05, item.Longitude + 0.05 );
+            pos = new LatLng(item.Latitude+ threshold, item.Longitude - threshold);
+            threshold += threshold;
+           // 51.507340, -0.130706
         }
         else {
             pos = new LatLng(item.Latitude, item.Longitude);
@@ -134,7 +215,7 @@ if(crimeAPIResult != null) {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_view, menu);
+        getMenuInflater().inflate(R.menu.menu_main_search, menu);
         return true;
     }
 
@@ -150,7 +231,33 @@ if(crimeAPIResult != null) {
             return true;
         }
 
+        if(id == R.id.action_search)
+        {
+            super.onSearchRequested();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
+    class CrimeApiHandler implements ICrimeUpdateHandler
+    {
+        @Override
+        public void HandleCrimeUpdate(ArrayList<CrimeApiResult> result) {
+
+            if(result != null) {
+                crimeAPIResult = new ArrayList<RiskObject>();
+                for (Iterator<CrimeApiResult> i = result.iterator(); i.hasNext(); ) {
+                    CrimeApiResult item = i.next();
+                    RiskObject o = new RiskObject();
+                    o.Category = item.getCategory();
+                    o.Latitude = Double.parseDouble(item.getLocation().getLatitude());
+                    o.Longitude = Double.parseDouble(item.getLocation().getLongitude());
+                    o.StreetName = item.getLocation().getStreet().getName();
+                    crimeAPIResult.add(o);
+                }
+            }
+
+            setupMap();
+        }
+    }
 }

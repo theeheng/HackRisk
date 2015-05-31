@@ -73,6 +73,8 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private View mSignOutButtons;
     private View mLoginFormView;
 
+    private Button mContinueButton;
+
     //private MyGoogleAPIClient myApiClient;
     private String locationLabel;
     Location mLastLocation;
@@ -87,6 +89,15 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         // Find the Google+ sign in button.
         mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+        mContinueButton = (Button) findViewById(R.id.plus_continue_button);
+
+        mContinueButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToHome();
+            }
+        });
+
         if (supportsGooglePlayServices()) {
             // Set a listener to connect the user when the G+ button is clicked.
             mPlusSignInButton.setOnClickListener(new OnClickListener() {
@@ -130,6 +141,17 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         mProgressView = findViewById(R.id.login_progress);
         mEmailLoginFormView = findViewById(R.id.email_login_form);
         mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
+    }
+
+    private void ToHome() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+          /*      Bundle b = new Bundle();
+                b.putSerializable(LoginActivity.EXTRA_CRIMEAPIRESULT, crimeApiResults);
+
+                intent.putExtra(LoginActivity.EXTRA_LOCATION, locationLabel);
+*/
+        startActivity(intent);
     }
 
     private void populateAutoComplete() {
@@ -470,14 +492,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
             if (success) {
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-          /*      Bundle b = new Bundle();
-                b.putSerializable(LoginActivity.EXTRA_CRIMEAPIRESULT, crimeApiResults);
-
-                intent.putExtra(LoginActivity.EXTRA_LOCATION, locationLabel);
-*/
-                startActivity(intent);
+           ToHome();
 
 
 

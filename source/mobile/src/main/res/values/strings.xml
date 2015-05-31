@@ -14,4 +14,5 @@
     <string name="search_setting_description">Address</string>
     <string name="app_label">Allianz</string>
     <string name="search_hint">search by address</string>
+    <string name="action_search">Search</string>
 </resources>

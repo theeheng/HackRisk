@@ -2,7 +2,7 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_label"
     android:hint="@string/search_hint"
-    android:searchSuggestAuthority="com.example.htan.myapplication.StockCountItemSearchByNameSuggestionProvider"
+    android:searchSuggestAuthority="com.allianz.hackrisk.hackrisk.AddressSearchByNameSuggestionProvider"
     android:searchSettingsDescription="@string/search_setting_description"
     android:includeInGlobalSearch="true"
     android:queryAfterZeroResults="true"

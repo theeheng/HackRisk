@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+    <ImageButton
+        android:layout_alignParentTop="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/adscreenexit"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="350dp"
+        android:foreground="@drawable/exit_adscreen" />
+    <LinearLayout
+        android:id="@+id/logocontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_below="@id/adscreenexit">
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="90dp"
+            android:id="@+id/logo"
+            android:scaleType="fitXY"
+            android:src="@drawable/logo" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/adcontent"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/logocontainer"
+        android:textColor="#FFFFFF"
+        android:text="@string/advert_copy"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="10dp"></TextView>
+    <ImageView
+        android:layout_below="@id/adcontent"
+        android:layout_width="350dp"
+        android:layout_height="80dp"
+        android:id="@+id/protection"
+        android:scaleType="fitXY"
+        android:src="@drawable/allianz_advert"
+        android:layout_marginLeft="20dp" />
+
+
+</RelativeLayout>

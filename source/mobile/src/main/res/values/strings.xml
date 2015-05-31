@@ -16,4 +16,11 @@
     <string name="search_hint">search by address</string>
     <string name="action_search">Search</string>
     <string name="font_name">gillsans-light</string>
+    <string name="advert_copy">Hello Heng,\n\n
+        We have noticed that you are currently travelling away from London.\n\n
+        Are you aware that the country you are visiting has a HIGH Health Risk profile?\n\n
+        To save you from a hefty hospital and doctor fee, why don't you protect yourself with Allianz Travel insurance, which starts at as little as £43.71 a day?\n
+        \nHave a great and safe trip! Be careful now!\n\n
+    \t\t\t\t\t\t\t\t\t\t\t Your Trusted Partner,\n\n
+    \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAllianz</string>
 </resources>

@@ -115,6 +115,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View mView =  inflater.inflate(R.layout.fragment_main, container, false);
 
         ratingListView = (ListView) mView.findViewById (R.id.ratingListView);

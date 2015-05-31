@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="base_color">#00529B</color>
+    <color name="shadow_color">#00326B</color>
+    <color name="hilight_color">#2072BB</color>
+
+</resources>

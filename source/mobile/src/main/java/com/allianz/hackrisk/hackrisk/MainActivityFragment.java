@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -168,7 +169,7 @@ public class MainActivityFragment extends Fragment {
         return mView;
     }
 
-    public void RebindFragment(ArrayList<CrimeApiResult> result)
+    public void RebindFragment(final ArrayList<CrimeApiResult> result)
     {
         HashMap<Integer,Double> rating = new HashMap<Integer,Double>();
 
@@ -199,6 +200,84 @@ public class MainActivityFragment extends Fragment {
                                     int position, long id) {
 
                 Intent intent = new Intent(getActivity(), RiskListActivity.class);
+
+                Bundle b = new Bundle();
+
+                ArrayList<RiskObject> ro = new ArrayList<RiskObject>();
+
+                if(result != null && position == 2) {
+                    for (Iterator<CrimeApiResult> i = result.iterator(); i.hasNext(); ) {
+                        CrimeApiResult item = i.next();
+                        RiskObject o = new RiskObject();
+
+                        o.Header = item.getCategory();
+
+                        if(item.getOutcomeStatus() != null) {
+
+                            if(item.getOutcomeStatus().getCategory() != null) {
+                                o.Description = item.getOutcomeStatus().getCategory();
+                            }
+
+                            if(item.getOutcomeStatus().getCategory() != null) {
+
+                                if(o.Description != null) {
+                                    o.Description = o.Description + " " + item.getOutcomeStatus().getDate();
+                                }
+                                else
+                                {
+                                    o.Description = item.getOutcomeStatus().getDate();
+                                }
+                            }
+
+                        }
+                        o.Location = item.getLocation().getStreet().getName();
+                        o.Date = item.getMonth();
+
+                        o.Category = item.getCategory();
+                        o.Latitude = Double.parseDouble(item.getLocation().getLatitude());
+                        o.Longitude = Double.parseDouble(item.getLocation().getLongitude());
+                        o.StreetName = item.getLocation().getStreet().getName();
+                        ro.add(o);
+                    }
+                }
+                else if(position == 1)
+                {
+                    RiskObject r1 = new RiskObject();
+                    r1.Header = "Traffic Risk Headline1";
+                    r1.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
+                    r1.Location = "London , United Kingdom";
+                    r1.Date = "25/05/2015";
+
+                    RiskObject r2 = new RiskObject();
+                    r2.Header = "Traffic Risk Headline2";
+                    r2.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
+                    r2.Location = "London , United Kingdom";
+                    r2.Date = "25/05/2015";
+
+                    ro.add(r1);
+                    ro.add(r2);
+                }
+                else if (position == 0)
+                {
+                    RiskObject r1 = new RiskObject();
+                    r1.Header = "Health Risk Headline1";
+                    r1.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
+                    r1.Location = "London , United Kingdom";
+                    r1.Date = "25/05/2015";
+
+                    RiskObject r2 = new RiskObject();
+                    r2.Header = "Health Risk Headline2";
+                    r2.Description = "sdfasd fdsafdsa fdsafsa dfdasf sdf sdfsdafdsa fsdaf sdafsda fdsfdsf asdfsda fa dsf dsaf";
+                    r2.Location = "London , United Kingdom";
+                    r2.Date = "25/05/2015";
+
+                    ro.add(r1);
+                    ro.add(r2);
+                }
+
+                b.putSerializable(MainActivity.EXTRA_CRIMEAPIRESULT, ro);
+                intent.putExtra(MainActivity.EXTRA_CRIMEAPIRESULT, b);
+
                 startActivity(intent);
                 /*final String item = (String) parent.getItemAtPosition(position);
                 view.animate().setDuration(2000).alpha(0)

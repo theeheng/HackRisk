@@ -9,6 +9,21 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         />
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/listItemRatingName"
+    android:layout_toRightOf="@id/listItemRatingIcon"
+    android:text="Crime"
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listItemRatingWord"
+        android:layout_toRightOf="@id/listItemRatingIcon"
+        android:layout_below="@id/listItemRatingName"
+        android:text="High"
+        />
 
     <ProgressBar
     android:id="@+id/listItemRatingBar"
@@ -16,7 +31,7 @@
     android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:visibility="visible"
-    android:layout_toEndOf="@id/listItemRatingIcon"
+    android:layout_below="@id/listItemRatingIcon"
     android:layout_centerVertical="true"
     android:paddingLeft="20dp"
 

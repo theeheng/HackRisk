@@ -3,6 +3,20 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+<item name="android:buttonStyle">@style/MyButton</item>
     </style>
+
+    <style name="MyActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/gradient_background</item>
+    </style>
+
+    <style name="MyButton"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/buttondrawable</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 
 </resources>

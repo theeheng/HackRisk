@@ -3,8 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+<<<<<<< HEAD
         <item name="android:actionBarStyle">@style/MyActionBar</item>
 <item name="android:buttonStyle">@style/MyButton</item>
+=======
+        <!--<item name="android:background">#00529B</item>-->
+        <item name="android:background">@drawable/gradient_background</item>
+>>>>>>> origin/master
     </style>
 
     <style name="MyActionBar"

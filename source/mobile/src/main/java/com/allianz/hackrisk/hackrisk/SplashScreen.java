@@ -3,10 +3,12 @@ package com.allianz.hackrisk.hackrisk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.TextView;
 
 public class SplashScreen extends Activity {
 
@@ -22,6 +24,7 @@ public class SplashScreen extends Activity {
             @Override
             public void run()
             {
+
                 Intent i  = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(i);
 
@@ -30,5 +33,6 @@ public class SplashScreen extends Activity {
         }, SPLASH_TIME_OUT);
 
     }
+
 
 }

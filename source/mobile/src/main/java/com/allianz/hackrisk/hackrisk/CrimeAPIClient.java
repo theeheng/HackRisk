@@ -60,6 +60,7 @@ public class CrimeAPIClient {
 
                         CrimeApiResult s = new CrimeApiResult();
                         s.setCategory(jsonObj.getString("category"));
+                        s.setMonth(jsonObj.getString("month"));
                        /* s.CategoryId = Integer.parseInt(jsonUsrPro.getString("CategoryID"));
                         s.ItemName = jsonUsrPro.getString("ItemName");
                         s.CategoryName = jsonUsrPro.getString("CategoryName");
@@ -96,7 +97,15 @@ public class CrimeAPIClient {
 
                             if (outcome != null) {
                                 OutcomeStatus outStatus = new OutcomeStatus();
-                                outStatus.setCategory(outcome.getString("category"));
+
+                                if(!outcome.isNull("category"))
+                                {
+                                    outStatus.setCategory(outcome.getString("category"));
+                                }
+
+                                if(!outcome.isNull("date")) {
+                                    outStatus.setDate(outcome.getString("date"));
+                                }
                                 s.setOutcomeStatus(outStatus);
                             }
                         }

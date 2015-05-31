@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -35,13 +36,22 @@ public class RiskListActivity extends ListActivity {
     private String mErrorMsg = "";
     private List<RiskObject> items;
     private RiskObject selectedItem;
-
+    private List<RiskObject> riskObjects;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_risk_list);
+
+        Intent queryIntent = getIntent();
+
+        Bundle bundle = queryIntent.getExtras();
+
+        if (bundle != null && bundle.getBundle(MainActivity.EXTRA_CRIMEAPIRESULT) != null) {
+            bundle = bundle.getBundle(MainActivity.EXTRA_CRIMEAPIRESULT);
+            riskObjects = (List<RiskObject>) bundle.getSerializable(MainActivity.EXTRA_CRIMEAPIRESULT);
+        }
 
         PrepareItemClickHandler();
 
@@ -211,7 +221,7 @@ public class RiskListActivity extends ListActivity {
 
     public List<RiskObject> loadData()
     {
-        ArrayList<RiskObject> test = new ArrayList<RiskObject>();
+       /* ArrayList<RiskObject> test = new ArrayList<RiskObject>();
 
         RiskObject r1 = new RiskObject();
         r1.Header = "Header Line R1";
@@ -228,14 +238,16 @@ public class RiskListActivity extends ListActivity {
         test.add(r2);
 
         return test;
+        */
+        return riskObjects;
     }
 
     public String getLine1(RiskObject risk){
-        return risk.Description.substring(1,20);
+        return risk.Header;
     }
 
     public String getLine2(RiskObject risk){
-        return "second line";
+        return risk.Location;
     }
 
     public String getActivityTitle()

@@ -215,6 +215,9 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            handleNotificationSimulation();
+
             return true;
         }
 
@@ -278,5 +281,12 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         }
         this.crimeApiResults = result;
         //fm.beginTransaction().detach(maf).attach(maf).commit();
+    }
+
+    private void handleNotificationSimulation() {
+
+        Intent intent = new Intent(getApplicationContext() , RiskTrackingNotificationService.class);
+        startService(intent);
+
     }
 }
